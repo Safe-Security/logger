@@ -1,5 +1,5 @@
 {
-  "name": "@safe-wip/logger",
+  "name": "@safe-security/logger",
   "version": "1.0.0-rc.1",
   "description": "Custom logging framework used in SAFE",
   "main": "lib/index.js",
