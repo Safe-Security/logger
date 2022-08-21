@@ -1,0 +1,20 @@
+{
+  "name": "@safe-wip/logger",
+  "version": "1.0.0-rc.1",
+  "description": "Custom logging framework used in SAFE",
+  "main": "lib/index.js",
+  "types": "lib",
+  "repository": "https://github.com/Safe-Security/logger.git",
+  "author": "Prathap <prathap.p@safe.security>",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc -p ."
+  },
+  "dependencies": {
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "@types/winston": "^2.4.4",
+    "typescript": "^4.7.4"
+  }
+}
