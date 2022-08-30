@@ -1,4 +1,4 @@
-const logger = require("logger-safe-security").default;
+const { logger } = require("logger-safe-security").default;
 const appLogger = logger.child({ service: "sample" });
 
 logger.info("This is a parent logger");

@@ -2,7 +2,7 @@ import winston from "winston";
 
 const { combine, errors, timestamp, splat, json } = winston.format;
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
 
     // default log level is "info"
     level: "info",
@@ -39,5 +39,3 @@ const logger = winston.createLogger({
     // generic metadata applied to all logs
     defaultMeta: { type: "application" }
 });
-
-export default logger;
