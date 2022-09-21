@@ -6,11 +6,15 @@ export const levels = winston.config.npm.levels;
 
 export type Logger = winston.Logger;
 
-export const createLogger = ({
-    logLevel = "info"
-}: {
-    logLevel: string;
-} = { logLevel: "info" }): winston.Logger =>
+export const createLogger = (
+    {
+        logLevel = "info",
+        service
+    }: {
+        logLevel?: string;
+        service?: string;
+    } = { logLevel: "info" }
+): winston.Logger =>
     winston.createLogger({
         // default log level is "info"
         level: logLevel,
@@ -42,5 +46,5 @@ export const createLogger = ({
         ],
 
         // generic metadata applied to all logs
-        defaultMeta: { type: "application" }
+        defaultMeta: { type: "application", ...(service && { service }) }
     });
