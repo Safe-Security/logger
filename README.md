@@ -25,20 +25,23 @@ The introduction of this package makes it very easy for clients to consume & lev
 
 In Javascript:
 ```js
-const { logger } = require("logger-safe-security");
+const { createLoggerInstance } = require("logger-safe-security");
+const logger = createLoggerInstance({ logLevel: "info" });
 logger.info("Hello world!");
 ```
 
 In Typescript:
 ```js
-import { logger } from "logger-safe-security";
+const { createLoggerInstance } = require("logger-safe-security");
+const logger = createLoggerInstance({ logLevel: "info" });
 logger.info("Hello world!");
 ```
 
 Additionally, one can create child loggers inherited from the parent/package-default to pass specific metadata. 
 One such use case would be to add `service` metadata while importing it within the context of a service. For example:
 ```js
-import { logger } from "logger-safe-security";
+const { createLoggerInstance } = require("logger-safe-security");
+const logger = createLoggerInstance();
 const serviceLogger = logger.child({ service: "sample" });
 serviceLogger.info("This log line will include service metadata");
 ```

@@ -2,7 +2,11 @@ import winston from "winston";
 
 const { combine, errors, timestamp, splat, json } = winston.format;
 
-export const logger = ({ logLevel = "info" }: { logLevel: string }) =>
+export const createLoggerInstance = ({
+  logLevel = "info",
+}: {
+  logLevel: string;
+}) =>
   winston.createLogger({
     // default log level is "info"
     level: logLevel,
