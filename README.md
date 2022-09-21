@@ -32,7 +32,7 @@ logger.info("Hello world!");
 
 In Typescript:
 ```js
-const { createLoggerInstance } = require("logger-safe-security");
+import { createLoggerInstance } from "logger-safe-security";
 const logger = createLoggerInstance({ logLevel: "info" });
 logger.info("Hello world!");
 ```
