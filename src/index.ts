@@ -2,11 +2,15 @@ import winston from "winston";
 
 const { combine, errors, timestamp, splat, json } = winston.format;
 
+export const levels = winston.config.npm.levels;
+
+export type Logger = winston.Logger;
+
 export const createLogger = ({
     logLevel = "info"
 }: {
     logLevel: string;
-}): winston.Logger =>
+} = { logLevel: "info" }): winston.Logger =>
     winston.createLogger({
         // default log level is "info"
         level: logLevel,
