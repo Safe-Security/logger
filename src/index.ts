@@ -2,7 +2,7 @@ import winston from "winston";
 
 const { combine, errors, timestamp, splat, json } = winston.format;
 
-export const createLoggerInstance = ({
+export const createLogger = ({
     logLevel = "info"
 }: {
     logLevel: string;
