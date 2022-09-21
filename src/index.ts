@@ -2,40 +2,41 @@ import winston from "winston";
 
 const { combine, errors, timestamp, splat, json } = winston.format;
 
-export const logger = winston.createLogger({
+export const createLogger = ({
+    logLevel = "info"
+}: {
+    logLevel: string;
+}): winston.Logger =>
+    winston.createLogger({
+        // default log level is "info"
+        level: logLevel,
 
-    // default log level is "info"
-    level: "info",
+        // combining multiple formats to get the desired output
+        format: combine(
+            // required to log errors thrown by the application; ignored otherwise
+            errors({ stack: true }),
 
-    // combining multiple formats to get the desired output
-    format: combine(
+            // enables string interpolation of messages
+            splat(),
 
-        // required to log errors thrown by the application; ignored otherwise
-        errors({ stack: true }),
+            // adds timestamp to all log messages
+            timestamp(),
 
-        // enables string interpolation of messages
-        splat(),
+            // default log format is JSON
+            json()
+        ),
 
-        // adds timestamp to all log messages
-        timestamp(),
+        transports: [
+            // logs will be written to console
+            new winston.transports.Console({
+                // catch and log `uncaughtException` events from the application
+                handleExceptions: true,
 
-        // default log format is JSON
-        json()
-    ),
+                // catch and log `uncaughtRejection` events from the application
+                handleRejections: true
+            })
+        ],
 
-    transports: [
-        
-        // logs will be written to console
-        new winston.transports.Console({
-
-            // catch and log `uncaughtException` events from the application
-            handleExceptions: true,
-
-            // catch and log `uncaughtRejection` events from the application
-            handleRejections: true
-        })
-    ],
-
-    // generic metadata applied to all logs
-    defaultMeta: { type: "application" }
-});
+        // generic metadata applied to all logs
+        defaultMeta: { type: "application" }
+    });

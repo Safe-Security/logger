@@ -25,20 +25,23 @@ The introduction of this package makes it very easy for clients to consume & lev
 
 In Javascript:
 ```js
-const { logger } = require("logger-safe-security");
+const { createLogger } = require("logger-safe-security");
+const logger = createLogger({ logLevel: "info" });
 logger.info("Hello world!");
 ```
 
 In Typescript:
 ```js
-import { logger } from "logger-safe-security";
+import { createLogger } from "logger-safe-security";
+const logger = createLogger({ logLevel: "info" });
 logger.info("Hello world!");
 ```
 
 Additionally, one can create child loggers inherited from the parent/package-default to pass specific metadata. 
 One such use case would be to add `service` metadata while importing it within the context of a service. For example:
 ```js
-import { logger } from "logger-safe-security";
+const { createLogger } = require("logger-safe-security");
+const logger = createLogger();
 const serviceLogger = logger.child({ service: "sample" });
 serviceLogger.info("This log line will include service metadata");
 ```
@@ -51,7 +54,7 @@ The logger exported as part of this package contains the following definition:
   - Application errors will be captured in the logs.
   - String interpolation is supported.
 - Log level: 
-  - The defeault log level is `INFO`.
+  - The default log level is `INFO`.
 - Transports:
   - All logs will be written to `Console` by default.
   - Exceptions & Promise Rejections will be handled & written to `Console` as well.
