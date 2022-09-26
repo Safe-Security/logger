@@ -1,6 +1,6 @@
 import winston from "winston";
 
-const { combine, errors, timestamp, splat, json } = winston.format;
+const { combine, errors, timestamp, splat, json, metadata } = winston.format;
 
 export const levels = winston.config.npm.levels;
 
@@ -8,27 +8,32 @@ export type Logger = winston.Logger;
 
 export const createLogger = (
     {
-        logLevel = "info",
+        level = "info",
         service
     }: {
-        logLevel?: string;
+        level?: string;
         service?: string;
-    } = { logLevel: "info" }
+    } = { level: "info" }
 ): winston.Logger =>
     winston.createLogger({
         // default log level is "info"
-        level: logLevel,
+        level,
 
         // combining multiple formats to get the desired output
         format: combine(
             // required to log errors thrown by the application; ignored otherwise
             errors({ stack: true }),
 
+            // adds timestamp to all log messages
+            timestamp(),
+
             // enables string interpolation of messages
             splat(),
 
-            // adds timestamp to all log messages
-            timestamp(),
+            // moves all the other fields in the message to `metadata` property
+            metadata({
+                fillExcept: ["message", "level", "timestamp", "service", "type"]
+            }),
 
             // default log format is JSON
             json()
@@ -47,7 +52,7 @@ export const createLogger = (
 
         // do not exit the process after logging an uncaughtException
         exitOnError: false,
-        
+
         // generic metadata applied to all logs
         defaultMeta: { type: "application", ...(service && { service }) }
     });
