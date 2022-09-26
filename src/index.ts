@@ -8,16 +8,16 @@ export type Logger = winston.Logger;
 
 export const createLogger = (
     {
-        level = "info",
+        logLevel = "info",
         service
     }: {
-        level?: string;
+        logLevel?: string;
         service?: string;
-    } = { level: "info" }
+    } = { logLevel: "info" }
 ): winston.Logger =>
     winston.createLogger({
         // default log level is "info"
-        level,
+        level: logLevel,
 
         // combining multiple formats to get the desired output
         format: combine(
