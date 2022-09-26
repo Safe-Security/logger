@@ -59,3 +59,4 @@ The logger exported as part of this package contains the following definition:
 - Metadata:
   - `{ "type" : "application" }` is added as default metadata to easily identify application logs. This can further be extended to differentiate 
   from audit logs and add parsing/filtering rules (for e.g. in Datadog) as needed.
+  - Additionally, all other metadata passed to the log messages will be stored under `metadata` property for easy identification & grouping.
