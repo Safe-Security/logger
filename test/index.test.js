@@ -1,5 +1,5 @@
-const { logger } = require("logger-safe-security").default;
-const appLogger = logger.child({ service: "sample" });
+const { createLogger } = require("logger-safe-security");
+const logger = createLogger({ service: "sample" });
 
-logger.info("This is a parent logger");
-appLogger.info("This is a child logger");
+logger.info("This is a sample logger");
+logger.info("This is a sample logger with more information", { planet: "Earth" });

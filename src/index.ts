@@ -1,6 +1,6 @@
 import winston from "winston";
 
-const { combine, errors, timestamp, splat, json } = winston.format;
+const { combine, errors, timestamp, splat, json, metadata } = winston.format;
 
 export const levels = winston.config.npm.levels;
 
@@ -24,11 +24,16 @@ export const createLogger = (
             // required to log errors thrown by the application; ignored otherwise
             errors({ stack: true }),
 
+            // adds timestamp to all log messages
+            timestamp(),
+
             // enables string interpolation of messages
             splat(),
 
-            // adds timestamp to all log messages
-            timestamp(),
+            // moves all the other fields in the message to `metadata` property
+            metadata({
+                fillExcept: ["message", "level", "timestamp", "service", "type"]
+            }),
 
             // default log format is JSON
             json()
