@@ -52,7 +52,7 @@ export const createLogger = (
 
         // do not exit the process after logging an uncaughtException
         exitOnError: false,
-        
+
         // generic metadata applied to all logs
         defaultMeta: { type: "application", ...(service && { service }) }
     });
