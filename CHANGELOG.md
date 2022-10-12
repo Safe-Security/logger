@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Safe-Security/logger/compare/v1.2.0...v1.2.1) (2022-10-12)
+
+
+### Bug Fixes
+
+* updated metadata to exclude error object ([#16](https://github.com/Safe-Security/logger/issues/16)) ([3061b4f](https://github.com/Safe-Security/logger/commit/3061b4f2b7d18a03c56e76d20b35ef74ba8ef6c5))
+
 # [1.2.0](https://github.com/Safe-Security/logger/compare/v1.1.0...v1.2.0) (2022-09-30)
 
 
