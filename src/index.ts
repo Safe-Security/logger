@@ -53,7 +53,7 @@ export const createLogger = (
                     "error"
                 ]
             }),
-            // custom formatter to format the error object
+            // custom formatter to format the "error" property
             formatError(),
 
             // default log format is JSON
