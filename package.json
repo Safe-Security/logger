@@ -1,10 +1,12 @@
 {
   "name": "logger-safe-security",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "Custom logging framework used in SAFE",
   "main": "lib/index.js",
   "types": "lib",
-  "files": ["lib/**/*"],
+  "files": [
+    "lib/**/*"
+  ],
   "repository": "https://github.com/Safe-Security/logger.git",
   "author": "Prathap <prathap.p@safe.security>",
   "license": "MIT",
