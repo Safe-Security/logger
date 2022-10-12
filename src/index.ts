@@ -32,7 +32,14 @@ export const createLogger = (
 
             // moves all the other fields in the message to `metadata` property
             metadata({
-                fillExcept: ["message", "level", "timestamp", "service", "type"]
+                fillExcept: [
+                    "message",
+                    "level",
+                    "timestamp",
+                    "service",
+                    "type",
+                    "error"
+                ]
             }),
 
             // default log format is JSON
