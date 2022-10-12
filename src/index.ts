@@ -6,6 +6,18 @@ export const levels = winston.config.npm.levels;
 
 export type Logger = winston.Logger;
 
+/* A custom format that is used to format the error object. */
+const formatError = winston.format(info => {
+    if ("error" in info && info.error instanceof Error) {
+        const {
+            error: { message, stack, ...rest }
+        } = info;
+        info.error = { message, stack, ...rest };
+    }
+
+    return info;
+});
+
 export const createLogger = (
     {
         logLevel = "info",
@@ -32,8 +44,17 @@ export const createLogger = (
 
             // moves all the other fields in the message to `metadata` property
             metadata({
-                fillExcept: ["message", "level", "timestamp", "service", "type"]
+                fillExcept: [
+                    "message",
+                    "level",
+                    "timestamp",
+                    "service",
+                    "type",
+                    "error"
+                ]
             }),
+            // custom formatter to format the error object
+            formatError(),
 
             // default log format is JSON
             json()
