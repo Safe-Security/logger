@@ -18,13 +18,31 @@ const formatError = winston.format(info => {
     return info;
 });
 
+/* A custom format that is used to include tenantId. */
+const formatTenantId = (tenantId: string | undefined) => {
+    console.log(tenantId);
+    return winston.format(info => {
+    if (tenantId) {
+        console.log("Here");
+        const { tenantId } = info;
+        info.tenantId = tenantId;
+    } else {
+        console.log("There");
+        info.tenantId = "";
+    }
+
+    return info;
+})};
+
 export const createLogger = (
     {
         logLevel = "info",
-        service
+        service,
+        tenantId
     }: {
         logLevel?: string;
         service?: string;
+        tenantId?: string;
     } = { logLevel: "info" }
 ): winston.Logger =>
     winston.createLogger({
@@ -55,6 +73,9 @@ export const createLogger = (
             }),
             // custom formatter to format the "error" property
             formatError(),
+
+            // custom formatter to format the tenantId
+            formatTenantId(tenantId)(),
 
             // default log format is JSON
             json()
