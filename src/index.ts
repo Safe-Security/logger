@@ -28,7 +28,7 @@ const formatError = winston.format(info => {
 });
 
 /* A custom format that is used to include config parameters. */
-const formatTenantId = (parameters: ParameterConfig | undefined) => {
+const formatConfigParams = (parameters: ParameterConfig | undefined) => {
     return winston.format(info => {
         if (parameters) {
             Object.keys(parameters).forEach(key => {
@@ -92,8 +92,8 @@ export const createLogger = (
             // custom formatter to format the "error" property
             formatError(),
 
-            // custom formatter to format the tenantId
-            formatTenantId(parameters)(),
+            // custom formatter to format the config parameters
+            formatConfigParams(parameters)(),
 
             // default log format is JSON
             json()
