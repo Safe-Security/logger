@@ -9,6 +9,7 @@ export type Logger = winston.Logger;
 interface ParameterConfig {
     [key: string]: {
         valueFromMethod: <T>(arg: string) => T;
+        fallback?: string;
     };
 }
 interface ConfigParams {
@@ -33,7 +34,7 @@ const formatConfigParams = (parameters: ParameterConfig | undefined) => {
         if (parameters) {
             Object.keys(parameters).forEach(key => {
                 if (parameters[key]) {
-                    const { valueFromMethod } = parameters[key];
+                    const { valueFromMethod, fallback } = parameters[key];
                     try {
                         if (
                             typeof valueFromMethod === "function" &&
@@ -41,7 +42,11 @@ const formatConfigParams = (parameters: ParameterConfig | undefined) => {
                         ) {
                             info[key] = valueFromMethod<string>(key);
                         }
-                    } catch (error) {}
+                    } catch (error) {
+                        if (fallback) {
+                            info[key] = fallback;
+                        }
+                    }
                 }
             });
         }
