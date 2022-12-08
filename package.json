@@ -1,6 +1,6 @@
 {
   "name": "logger-safe-security",
-  "version": "1.2.2",
+  "version": "1.2.1",
   "description": "Custom logging framework used in SAFE",
   "main": "lib/index.js",
   "types": "lib",

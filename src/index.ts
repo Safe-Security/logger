@@ -27,24 +27,23 @@ const formatError = winston.format(info => {
     return info;
 });
 
-/* A custom format that is used to include tenantId. */
+/* A custom format that is used to include config parameters. */
 const formatTenantId = (parameters: ParameterConfig | undefined) => {
     return winston.format(info => {
-        info.tenantId = "";
-        if (parameters && "tenantId" in parameters && parameters.tenantId) {
-            const { valueFromMethod } = parameters.tenantId;
-            try {
-                if (
-                    typeof valueFromMethod === "function" &&
-                    typeof valueFromMethod<string>("tenantId") === "string"
-                ) {
-                    info.tenantId = valueFromMethod<string>("tenantId");
+        if (parameters) {
+            Object.keys(parameters).forEach(key => {
+                if (parameters[key]) {
+                    const { valueFromMethod } = parameters[key];
+                    try {
+                        if (
+                            typeof valueFromMethod === "function" &&
+                            typeof valueFromMethod<string>(key) === "string"
+                        ) {
+                            info[key] = valueFromMethod<string>(key);
+                        }
+                    } catch (error) {}
                 }
-            } catch (error) {
-                console.error(
-                    "Error occurred while getting the tenantId from the valueFromMethod, using fallback value now!"
-                );
-            }
+            });
         }
 
         return info;
