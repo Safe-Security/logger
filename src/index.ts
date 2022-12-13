@@ -8,7 +8,14 @@ export type Logger = winston.Logger;
 
 interface ParameterConfig {
     [key: string]: {
+        /**
+         * Refers the return value of a custom method, in case a value is not found, it should throw an error
+         * to be able to use the fallback value instead
+         */
         valueFromMethod: <T>(arg: string) => T;
+        /**
+         * This value will be used if the function passed to the valueFromMethod throws an Exception
+         */        
         fallback?: string;
     };
 }
