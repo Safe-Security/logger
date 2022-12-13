@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/Safe-Security/logger/compare/v1.2.1...v2.0.0) (2022-12-13)
+
+
+### Features
+
+* add support to log additional attributes by default ([#17](https://github.com/Safe-Security/logger/issues/17)) ([1d022c7](https://github.com/Safe-Security/logger/commit/1d022c7c12c52e5b36aa98e8d097104aea59af93))
+
+
+### BREAKING CHANGES
+
+* add arbitrary parameters to be part of every log line by default
+
 ## [1.2.1](https://github.com/Safe-Security/logger/compare/v1.2.0...v1.2.1) (2022-10-12)
 
 
