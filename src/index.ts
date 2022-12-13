@@ -6,6 +6,23 @@ export const levels = winston.config.npm.levels;
 
 export type Logger = winston.Logger;
 
+interface ParameterConfig {
+    [key: string]: {
+        /**
+         * Refers the return value of a custom method, in case a value is not found, it should throw an error
+         * to be able to use the fallback value instead
+         */
+        valueFromMethod: <T>(arg: string) => T;
+        /**
+         * This value will be used if the function passed to the valueFromMethod throws an Exception
+         */        
+        fallback?: string;
+    };
+}
+interface ConfigParams {
+    parameters: ParameterConfig;
+}
+
 /* A custom format that is used to format the error object. */
 const formatError = winston.format(info => {
     if ("error" in info && info.error instanceof Error) {
@@ -18,16 +35,47 @@ const formatError = winston.format(info => {
     return info;
 });
 
+/* A custom format that is used to include config parameters. */
+const formatConfigParams = (parameters: ParameterConfig | undefined) => {
+    return winston.format(info => {
+        if (parameters) {
+            Object.keys(parameters).forEach(key => {
+                if (parameters[key]) {
+                    const { valueFromMethod, fallback } = parameters[key];
+                    try {
+                        if (
+                            typeof valueFromMethod === "function" &&
+                            typeof valueFromMethod<string>(key) === "string"
+                        ) {
+                            info[key] = valueFromMethod<string>(key);
+                        }
+                    } catch (error) {
+                        if (fallback) {
+                            info[key] = fallback;
+                        }
+                    }
+                }
+            });
+        }
+
+        return info;
+    });
+};
+
 export const createLogger = (
     {
         logLevel = "info",
-        service
+        service,
+        config
     }: {
         logLevel?: string;
         service?: string;
+        config?: ConfigParams | undefined;
     } = { logLevel: "info" }
-): winston.Logger =>
-    winston.createLogger({
+): winston.Logger => {
+    const parameters = config && config.parameters as ParameterConfig | undefined;
+
+    return winston.createLogger({
         // default log level is "info"
         level: logLevel,
 
@@ -56,6 +104,9 @@ export const createLogger = (
             // custom formatter to format the "error" property
             formatError(),
 
+            // custom formatter to format the config parameters
+            formatConfigParams(parameters)(),
+
             // default log format is JSON
             json()
         ),
@@ -76,4 +127,4 @@ export const createLogger = (
 
         // generic metadata applied to all logs
         defaultMeta: { type: "application", ...(service && { service }) }
-    });
+    })};
