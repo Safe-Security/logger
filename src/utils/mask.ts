@@ -4,10 +4,20 @@ import { MaskableObject, MaskInput } from "../types";
  * Recursively masks specified fields in an object or array with '***'.
  * @param {MaskInput} obj - The object or array to mask. Can be undefined.
  * @param {string[]} [fieldsToMask] - Array of field names to mask.
- *                                    Defaults to ['userName', 'userEmail']
+ *                                    Defaults to ['createdBy', 'updatedBy', 'userName', 'userEmail', 'userRole']
  * @returns {MaskInput} The object or array with specified fields masked
  */
-const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
+const mask = (
+  obj: MaskInput,
+  fieldsToMask = [
+    "createdBy",
+    "updatedBy",
+    "userName",
+    "userEmail",
+    "userRole",
+    "ownerEmail",
+  ]
+): MaskInput => {
   /**
    * Implementation:
    * 1. If input is falsy or not an object, return as-is
@@ -20,9 +30,7 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
    * This ensures sensitive fields are masked at any nesting level,
    * including within serialized JSON strings.
    */
-
-  const maskFieldsSet = new Set(fieldsToMask.concat(["userName", "userEmail"]));
-
+  const maskString = "***";
   if (!obj || typeof obj !== "object") {
     return obj;
   }
@@ -33,8 +41,8 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
 
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {
-      if (maskFieldsSet.has(key)) {
-        return [key, getMaskedValue(value as string)];
+      if (fieldsToMask.includes(key)) {
+        return [key, maskString];
       }
 
       if (typeof value === "object" && value !== null) {
@@ -53,50 +61,6 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
       return [key, value];
     })
   );
-};
-
-const getMaskedValue = (value: unknown) => {
-  if (!value) {
-    return value;
-  }
-
-  if (typeof value !== "string") {
-    return value;
-  }
-
-  // Split the string on delimiters
-  const segments = value.split(/[@\s.]/);
-
-  // Process each segment according to rules
-  const maskedSegments = segments.map((segment) => {
-    if (segment.length <= 2) {
-      return segment;
-    }
-    if (segment.length > 4) {
-      const firstTwo = segment.slice(0, 2);
-      const lastTwo = segment.slice(-1);
-      const middleLength = segment.length - 3;
-      const maskedMiddle = "*".repeat(middleLength);
-      return `${firstTwo}${maskedMiddle}${lastTwo}`;
-    } else {
-      // 3-4 characters
-      const firstTwo = segment.slice(0, 2);
-      const remainingLength = segment.length - 2;
-      const masked = "*".repeat(remainingLength);
-      return `${firstTwo}${masked}`;
-    }
-  });
-
-  // Rejoin with original delimiters
-  return value
-    .split(/(@|\s|\.)/)
-    .map((part, index) => {
-      if (part === "@" || part === " " || part === ".") {
-        return part;
-      }
-      return maskedSegments.shift() || part;
-    })
-    .join("");
 };
 
 export default mask;
