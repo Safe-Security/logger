@@ -10,12 +10,11 @@ import { MaskableObject, MaskInput } from "../types";
 const mask = (
   obj: MaskInput,
   fieldsToMask = [
-    "createdBy",
-    "updatedBy",
     "userName",
     "userEmail",
     "userRole",
     "ownerEmail",
+    "businessOwnerEmail",
   ]
 ): MaskInput => {
   /**
