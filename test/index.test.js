@@ -28,6 +28,12 @@ const metadataWithSensitiveData = {
       userId: 1234567890,
     }),
   },
+  array: [
+    { userEmail: "test@test.com" },
+    { userName: "John Doe" },
+    { userRole: "admin" },
+    { userId: 1234567890 },
+  ],
 };
 
 // mask the metadata
