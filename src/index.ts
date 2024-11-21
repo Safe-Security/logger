@@ -23,22 +23,22 @@ interface ParameterConfig {
   };
 }
 interface ConfigParams {
-  parameters: ParameterConfig;
+  parameters?: ParameterConfig;
+  maskFields?: string[];
 }
 
-const maskMeta = winston.format((info) => {
-  let parsedInfo = JSON.parse(JSON.stringify(info)) as typeof info & {
-    metadata: MaskInput;
-  };
-  if (parsedInfo.metadata) {
-    parsedInfo = {
-      ...parsedInfo,
-      metadata: mask(parsedInfo.metadata),
+const maskMeta = (maskFields?: string[]) =>
+  winston.format((info) => {
+    const parsedInfo = JSON.parse(JSON.stringify(info)) as typeof info & {
+      metadata: MaskInput;
     };
-    return parsedInfo;
-  }
-  return info;
-});
+    const metadata = parsedInfo.metadata || {};
+    if (metadata) {
+      parsedInfo.metadata = mask(metadata, maskFields);
+      return parsedInfo;
+    }
+    return info;
+  });
 
 /* A custom format that is used to format the error object. */
 const formatError = winston.format((info) => {
@@ -90,8 +90,7 @@ export const createLogger = (
     config?: ConfigParams | undefined;
   } = { logLevel: "info" }
 ): winston.Logger => {
-  const parameters =
-    config && (config.parameters as ParameterConfig | undefined);
+  const parameters = config && config.parameters;
 
   return winston.createLogger({
     // default log level is "info"
@@ -121,7 +120,7 @@ export const createLogger = (
       }),
 
       // mask the metadata
-      maskMeta(),
+      maskMeta(config?.maskFields)(),
 
       // custom formatter to format the "error" property
       formatError(),
