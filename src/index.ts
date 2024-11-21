@@ -29,11 +29,11 @@ interface ConfigParams {
 
 const maskMeta = (maskFields?: string[]) =>
   winston.format((info) => {
-    const parsedInfo = JSON.parse(JSON.stringify(info)) as typeof info & {
+    const parsedInfo = info as typeof info & {
       metadata: MaskInput;
     };
     const metadata = parsedInfo.metadata || {};
-    if (metadata) {
+    if (Object.keys(metadata).length > 0) {
       parsedInfo.metadata = mask(metadata, maskFields);
       return parsedInfo;
     }
