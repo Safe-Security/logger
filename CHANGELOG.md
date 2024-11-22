@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/Safe-Security/logger/compare/v2.0.0...v2.1.0) (2024-11-22)
+
+
+### Features
+
+* added mask support on global logger ([#18](https://github.com/Safe-Security/logger/issues/18)) ([5953e8d](https://github.com/Safe-Security/logger/commit/5953e8d891b25ddfe4fbabaea560d7b0ca84d38f))
+
 # [2.0.0](https://github.com/Safe-Security/logger/compare/v1.2.1...v2.0.0) (2022-12-13)
 
 
