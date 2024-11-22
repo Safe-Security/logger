@@ -4,19 +4,10 @@ import { MaskableObject, MaskInput } from "../types";
  * Recursively masks specified fields in an object or array with '***'.
  * @param {MaskInput} obj - The object or array to mask. Can be undefined.
  * @param {string[]} [fieldsToMask] - Array of field names to mask.
- *                                    Defaults to ['createdBy', 'updatedBy', 'userName', 'userEmail', 'userRole']
+ *                                    Defaults to ['userName', 'userEmail']
  * @returns {MaskInput} The object or array with specified fields masked
  */
-const mask = (
-  obj: MaskInput,
-  fieldsToMask = [
-    "userName",
-    "userEmail",
-    "userRole",
-    "ownerEmail",
-    "businessOwnerEmail",
-  ]
-): MaskInput => {
+const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
   /**
    * Implementation:
    * 1. If input is falsy or not an object, return as-is
@@ -29,6 +20,9 @@ const mask = (
    * This ensures sensitive fields are masked at any nesting level,
    * including within serialized JSON strings.
    */
+
+  const maskFieldsSet = new Set(fieldsToMask.concat(["userName", "userEmail"]));
+
   const maskString = "***";
   if (!obj || typeof obj !== "object") {
     return obj;
@@ -40,7 +34,7 @@ const mask = (
 
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {
-      if (fieldsToMask.includes(key)) {
+      if (maskFieldsSet.has(key)) {
         return [key, maskString];
       }
 
