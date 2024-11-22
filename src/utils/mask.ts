@@ -23,7 +23,6 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
 
   const maskFieldsSet = new Set(fieldsToMask.concat(["userName", "userEmail"]));
 
-  const maskString = "***";
   if (!obj || typeof obj !== "object") {
     return obj;
   }
@@ -35,7 +34,7 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {
       if (maskFieldsSet.has(key)) {
-        return [key, maskString];
+        return [key, getMaskedValue(value as string)];
       }
 
       if (typeof value === "object" && value !== null) {
@@ -54,6 +53,50 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
       return [key, value];
     })
   );
+};
+
+const getMaskedValue = (value: unknown) => {
+  if (!value) {
+    return value;
+  }
+
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  // Split the string on delimiters
+  const segments = value.split(/[@\s.]/);
+
+  // Process each segment according to rules
+  const maskedSegments = segments.map((segment) => {
+    if (segment.length <= 2) {
+      return segment;
+    }
+    if (segment.length > 4) {
+      const firstTwo = segment.slice(0, 2);
+      const lastTwo = segment.slice(-1);
+      const middleLength = segment.length - 3;
+      const maskedMiddle = "*".repeat(middleLength);
+      return `${firstTwo}${maskedMiddle}${lastTwo}`;
+    } else {
+      // 3-4 characters
+      const firstTwo = segment.slice(0, 2);
+      const remainingLength = segment.length - 2;
+      const masked = "*".repeat(remainingLength);
+      return `${firstTwo}${masked}`;
+    }
+  });
+
+  // Rejoin with original delimiters
+  return value
+    .split(/(@|\s|\.)/)
+    .map((part, index) => {
+      if (part === "@" || part === " " || part === ".") {
+        return part;
+      }
+      return maskedSegments.shift() || part;
+    })
+    .join("");
 };
 
 export default mask;
