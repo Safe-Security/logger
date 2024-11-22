@@ -45,7 +45,7 @@ logger.info(
 
 const loggerWithCustomMaskFields = createLogger({
   config: {
-    maskFields: ["userEmail"],
+    maskFields: ["userRole"],
   },
 });
 
