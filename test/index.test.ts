@@ -53,3 +53,22 @@ loggerWithCustomMaskFields.info(
   "This is a sample logger with masked metadata",
   metadataWithSensitiveData
 );
+
+const foo: {
+  foo: string;
+  bar: {
+    bar: string;
+    userName: string;
+    baz?: any;
+  };
+} = {
+  foo: "Foo",
+  bar: {
+    bar: "Bar",
+    userName: "John Doe",
+  },
+};
+
+foo.bar.baz = foo; // Circular reference!
+
+logger.info("This is a sample logger with circular reference", foo);
