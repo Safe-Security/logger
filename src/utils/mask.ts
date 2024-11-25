@@ -5,30 +5,29 @@ import { MaskableObject, MaskInput } from "../types";
  * @param {MaskInput} obj - The object or array to mask. Can be undefined.
  * @param {string[]} [fieldsToMask] - Array of field names to mask.
  *                                    Defaults to ['userName', 'userEmail']
+ * @param {WeakSet<object>} [visited] - Set of visited objects to avoid circular references.
  * @returns {MaskInput} The object or array with specified fields masked
  */
-const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
-  /**
-   * Implementation:
-   * 1. If input is falsy or not an object, return as-is
-   * 2. For arrays, recursively mask each element
-   * 3. For objects:
-   *    - If key matches fieldsToMask, replace value with "***"
-   *    - If value is an object, recursively mask it
-   *    - If value is a JSON string, parse and mask the parsed object
-   *    - Otherwise keep value unchanged
-   * This ensures sensitive fields are masked at any nesting level,
-   * including within serialized JSON strings.
-   */
-
+const mask = (
+  obj: MaskInput,
+  fieldsToMask: string[] = [],
+  visited = new WeakSet<object>()
+): MaskInput => {
   const maskFieldsSet = new Set(fieldsToMask.concat(["userName", "userEmail"]));
 
   if (!obj || typeof obj !== "object") {
     return obj;
   }
 
+  if (visited.has(obj)) {
+    // Avoid circular references
+    return undefined;
+  }
+
+  visited.add(obj);
+
   if (Array.isArray(obj)) {
-    return obj.map((item) => mask(item, fieldsToMask)) as MaskInput;
+    return obj.map((item) => mask(item, fieldsToMask, visited)) as MaskInput;
   }
 
   return Object.fromEntries(
@@ -38,13 +37,16 @@ const mask = (obj: MaskInput, fieldsToMask: string[] = []): MaskInput => {
       }
 
       if (typeof value === "object" && value !== null) {
-        return [key, mask(value as MaskableObject, fieldsToMask)];
+        return [key, mask(value as MaskableObject, fieldsToMask, visited)];
       }
 
       if (typeof value === "string" && value.length > 0) {
         try {
           const parsedValue = JSON.parse(value) as MaskableObject;
-          return [key, JSON.stringify(mask(parsedValue, fieldsToMask))];
+          return [
+            key,
+            JSON.stringify(mask(parsedValue, fieldsToMask, visited)),
+          ];
         } catch (err) {
           // Not a valid JSON string
         }
@@ -90,7 +92,7 @@ const getMaskedValue = (value: unknown) => {
   // Rejoin with original delimiters
   return value
     .split(/(@|\s|\.)/)
-    .map((part, index) => {
+    .map((part) => {
       if (part === "@" || part === " " || part === ".") {
         return part;
       }
