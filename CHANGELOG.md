@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/Safe-Security/logger/compare/v2.1.0...v2.1.1) (2024-11-25)
+
+
+### Bug Fixes
+
+* fixed issues with masking circular references ([#19](https://github.com/Safe-Security/logger/issues/19)) ([8cd3a17](https://github.com/Safe-Security/logger/commit/8cd3a17ba310354c044a424230981d2a0d84986a))
+
 # [2.1.0](https://github.com/Safe-Security/logger/compare/v2.0.0...v2.1.0) (2024-11-22)
 
 
